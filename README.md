@@ -41,8 +41,8 @@ The widget automatically appears when the page loads!
 ```javascript
 window.NoticelyWidgetConfig = {
   subdomain: 'my-company', // Required
-  position: 'top-right',   // Optional
-  theme: 'dark'           // Optional
+  position: 'top-right', // Optional
+  theme: 'dark' // Optional
 };
 ```
 
@@ -81,7 +81,7 @@ src/
 ## 🎨 Features
 
 - **Lightweight**: Built with Preact
-- **Responsive**: Works on mobile and desktop  
+- **Responsive**: Works on mobile and desktop
 - **Themeable**: Light and dark themes
 - **Positioned**: Four corner positions
 - **Interactive**: Close button to hide widget
@@ -94,10 +94,10 @@ The widget provides a simple global API:
 
 ```javascript
 window.NoticelyWidget = {
-  create: function() {
+  create: function () {
     // Creates/recreates the widget using window.NoticelyWidgetConfig
   },
-  destroy: function() {
+  destroy: function () {
     // Removes the widget from the page
   }
 };
@@ -118,19 +118,19 @@ The widget automatically initializes when:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <title>My Website</title>
-</head>
-<body>
-  <h1>Welcome</h1>
-  
-  <script>
-    window.NoticelyWidgetConfig = {
-      subdomain: 'my-company'
-    };
-  </script>
-  <script src="widget.iife.js"></script>
-</body>
+  <head>
+    <title>My Website</title>
+  </head>
+  <body>
+    <h1>Welcome</h1>
+
+    <script>
+      window.NoticelyWidgetConfig = {
+        subdomain: 'my-company'
+      };
+    </script>
+    <script src="widget.iife.js"></script>
+  </body>
 </html>
 ```
 
@@ -150,18 +150,20 @@ The widget automatically initializes when:
 ## ❌ Error Handling
 
 If `window.NoticelyWidgetConfig` is missing or doesn't have a `subdomain`:
+
 - Console error is logged with helpful message
 - Widget doesn't initialize
 - No DOM elements are created
 
 If `enabled: false`:
+
 - Widget doesn't render
 - No console errors
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b my-feature`  
+2. Create a feature branch: `git checkout -b my-feature`
 3. Make changes and test with `npm run dev`
 4. Format code: `npm run format`
 5. Submit a pull request
