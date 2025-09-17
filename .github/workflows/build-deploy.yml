@@ -73,14 +73,26 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Commit and push built files
+      - name: Generate version tag
+        id: version
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -f dist/
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Deploy: Update built files [skip ci]"
-            git push
-          fi
+          VERSION=$(date +'%Y.%m.%d-%H%M%S')
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: v$VERSION"
+
+      - name: Create GitHub Release with build artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "Build ${{ steps.version.outputs.version }}"
+          body: |
+            Automated build from commit ${{ github.sha }}
+            
+            **Built files:**
+            - `widget.iife.js` - IIFE bundle for direct browser usage
+            - `widget.umd.cjs` - UMD bundle for CommonJS/AMD compatibility
+          files: |
+            dist/widget.iife.js
+            dist/widget.umd.cjs
+          draft: false
+          prerelease: false
