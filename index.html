@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Noticely Widget Demo</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 40px;
+        background: #f8f9fa;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      }
+      .section {
+        margin: 30px 0;
+        padding: 24px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border-left: 4px solid #3b82f6;
+      }
+
+      /* DaisyUI-inspired button styles - higher specificity to override widget CSS */
+      .container .btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        border: 1px solid transparent !important;
+        padding: 12px 24px !important;
+        margin: 4px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        cursor: pointer !important;
+        user-select: none !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        width: auto !important;
+        height: auto !important;
+      }
+
+      .container .btn:hover {
+        background: #2563eb !important;
+        transform: translateY(-1px) !important;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .container .btn:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+      }
+
+      .container .btn-secondary {
+        background: #f8fafc !important;
+        color: #475569 !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+
+      .container .btn-secondary:hover {
+        background: #f1f5f9 !important;
+        border-color: #cbd5e0 !important;
+      }
+
+      .code {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 16px 0;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .hero {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .hero h1 {
+        margin: 0 0 10px 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #334155;
+      }
+
+      .hero p {
+        margin: 0;
+        font-size: 1.125rem;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <h1>Noticely Widget</h1>
+        <p>
+          Embeddable status widget built with Preact and DaisyUI design system
+        </p>
+      </div>
+
+      <div class="section">
+        <h3>🧪 Interactive Demo</h3>
+        <p>
+          Test the widget with different configurations (each button changes
+          <code>window.NoticelyWidgetConfig</code> and reloads the widget):
+        </p>
+        <button class="btn" onclick="createBasicWidget()">Basic Widget</button>
+        <button class="btn" onclick="createDarkWidget()">Dark Theme</button>
+        <button class="btn" onclick="createTopWidget()">Top Position</button>
+        <button class="btn btn-secondary" onclick="clearWidgets()">
+          Disable Widget
+        </button>
+      </div>
+
+      <div class="section">
+        <h3>📋 Production Usage</h3>
+        <p>
+          This demo shows how the widget works in production. The widget
+          automatically initializes based on
+          <code>window.NoticelyWidgetConfig</code>.
+        </p>
+        <div class="code">
+          &lt;script&gt; window.NoticelyWidgetConfig = { subdomain:
+          'your-subdomain' }; &lt;/script&gt; &lt;script
+          src="/widget.iife.js"&gt;&lt;/script&gt;
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.NoticelyWidgetConfig = {
+        subdomain: 'demo-production'
+      };
+    </script>
+    <script type="module" src="/src/widget.tsx"></script>
+
+    <script>
+      // Demo functions that change config and reload widget
+
+      window.createBasicWidget = () => {
+        window.NoticelyWidgetConfig = {
+          subdomain: 'demo-basic',
+          theme: 'light',
+          position: 'bottom-right'
+        };
+        window.NoticelyWidget.create();
+      };
+
+      window.createDarkWidget = () => {
+        window.NoticelyWidgetConfig = {
+          subdomain: 'demo-dark',
+          theme: 'dark',
+          position: 'bottom-left'
+        };
+        window.NoticelyWidget.create();
+      };
+
+      window.createTopWidget = () => {
+        window.NoticelyWidgetConfig = {
+          subdomain: 'demo-top',
+          theme: 'light',
+          position: 'top-right'
+        };
+        window.NoticelyWidget.create();
+      };
+
+      window.clearWidgets = () => {
+        // Simply destroy the widget without recreating
+        window.NoticelyWidget.destroy();
+      };
+    </script>
+  </body>
+</html>

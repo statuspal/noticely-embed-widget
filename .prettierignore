@@ -1,0 +1,24 @@
+# Build outputs
+dist/
+node_modules/
+
+# Generated files
+*.min.js
+*.bundle.js
+
+# Coverage reports
+coverage/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# GitHub Actions workflows (use YAML-specific formatting)
+.github/workflows/
