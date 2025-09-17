@@ -87,12 +87,7 @@ jobs:
           name: "Build ${{ steps.version.outputs.version }}"
           body: |
             Automated build from commit ${{ github.sha }}
-            
-            **Built files:**
-            - `widget.iife.js` - IIFE bundle for direct browser usage
-            - `widget.umd.cjs` - UMD bundle for CommonJS/AMD compatibility
           files: |
-            dist/widget.iife.js
-            dist/widget.umd.cjs
+            dist/*
           draft: false
           prerelease: false

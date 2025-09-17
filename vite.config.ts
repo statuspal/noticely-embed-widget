@@ -2,6 +2,7 @@ import { defineConfig, build } from 'vite';
 import preact from '@preact/preset-vite';
 import { resolve } from 'path';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import compression from 'vite-plugin-compression';
 
 // Shared build configuration
 const createBuildConfig = (isDev = false) => ({
@@ -30,21 +31,12 @@ const autoRebuildWidget = () => {
     handleHotUpdate({ file }) {
       if (file.includes('src/widget') && !isBuilding) {
         isBuilding = true;
-        console.log('🔄 Auto-rebuilding widget...');
 
         build({
           plugins: [preact(), cssInjectedByJsPlugin()],
           mode: 'development',
           build: createBuildConfig(true)
-        })
-          .then(() => {
-            isBuilding = false;
-            console.log('✅ Widget auto-rebuilt successfully!');
-          })
-          .catch(error => {
-            isBuilding = false;
-            console.error(`❌ Auto-build failed: ${error.message}`);
-          });
+        }).finally(() => (isBuilding = false));
       }
       return undefined;
     }
@@ -52,11 +44,27 @@ const autoRebuildWidget = () => {
 };
 
 export default defineConfig(({ command, mode }) => {
-  if (command === 'build')
+  if (command === 'build') {
+    const plugins = [preact(), cssInjectedByJsPlugin()];
+
+    // Only add compression plugin for production builds
+    if (mode !== 'development')
+      plugins.push([
+        compression({
+          algorithm: 'gzip',
+          ext: '.gz',
+          deleteOriginFile: false, // Keep original files
+          threshold: 1024, // Only compress files larger than 1KB
+          filter: /\.(js|cjs)$/, // Include both .js and .cjs files
+          verbose: true // Show compression results
+        })
+      ]);
+
     return {
-      plugins: [preact(), cssInjectedByJsPlugin()],
+      plugins,
       build: createBuildConfig(mode === 'development')
     };
+  }
 
   return {
     plugins: [preact(), autoRebuildWidget()],
