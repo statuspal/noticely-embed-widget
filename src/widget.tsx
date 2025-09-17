@@ -19,12 +19,11 @@ declare global {
 
 // Main widget component - displays status information with controls
 export const Widget = ({
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  subdomain,
   theme = 'light',
   position = 'bottom-right'
-}: {
-  theme?: string;
-  position?: string;
-}) => {
+}: Window['NoticelyWidgetConfig']) => {
   return (
     <div
       className={`status-widget status-widget--${position}`}

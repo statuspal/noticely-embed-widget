@@ -52,14 +52,11 @@ const autoRebuildWidget = () => {
 };
 
 export default defineConfig(({ command, mode }) => {
-  const isDev = mode === 'development';
-
-  if (command === 'build') {
+  if (command === 'build')
     return {
       plugins: [preact(), cssInjectedByJsPlugin()],
-      build: createBuildConfig(isDev)
+      build: createBuildConfig(mode === 'development')
     };
-  }
 
   return {
     plugins: [preact(), autoRebuildWidget()],
