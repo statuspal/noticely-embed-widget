@@ -85,7 +85,7 @@ types/
 ## 🎨 Features
 
 - **Lightweight**: Built with Preact
-- **Responsive**: Works on mobile and desktop  
+- **Responsive**: Works on mobile and desktop
 - **Themeable**: Light and dark themes
 - **Positioned**: Four corner positions
 - **Interactive**: Close button to hide widget
