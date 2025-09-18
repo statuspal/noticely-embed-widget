@@ -7,10 +7,10 @@ import compression from 'vite-plugin-compression';
 // Shared build configuration
 const createBuildConfig = (isDev = false) => ({
   lib: {
-    entry: resolve(process.cwd(), 'src/widget.tsx'),
+    entry: resolve(process.cwd(), 'src/main.tsx'),
     name: 'NoticelyWidget',
-    fileName: 'widget',
-    formats: (isDev ? ['iife'] : ['iife', 'umd']) as ('iife' | 'umd')[]
+    fileName: 'main',
+    formats: ['iife', ...(isDev ? [] : ['umd'])] as ('iife' | 'umd')[]
   },
   minify: (isDev ? false : 'terser') as boolean | 'terser',
   rollupOptions: {
@@ -28,8 +28,8 @@ const autoRebuildWidget = () => {
 
   return {
     name: 'auto-rebuild-widget',
-    handleHotUpdate({ file }) {
-      if (file.includes('src/widget') && !isBuilding) {
+    handleHotUpdate() {
+      if (!isBuilding) {
         isBuilding = true;
 
         build({

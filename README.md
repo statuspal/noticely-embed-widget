@@ -17,7 +17,7 @@ A simple, embeddable status widget built with Preact. Shows a clean status indic
 ### 2. Include Widget
 
 ```html
-<script src="widget.iife.js"></script>
+<script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
 ```
 
 The widget automatically appears when the page loads!
@@ -42,7 +42,8 @@ The widget automatically appears when the page loads!
 window.NoticelyWidgetConfig = {
   subdomain: 'my-company', // Required
   position: 'top-right', // Optional
-  theme: 'dark' // Optional
+  theme: 'dark', // Optional
+  enabled: true // Optional - set to false to disable the widget
 };
 ```
 
@@ -63,7 +64,7 @@ npm run dev    # Development server at http://localhost:5173 with demo page
 ### Build
 
 ```bash
-npm run build  # Creates widget.iife.js in dist/
+npm run build  # Creates main.iife.js in dist/
 ```
 
 ### Testing
@@ -74,17 +75,21 @@ Open http://localhost:5173 during development to see the demo page with interact
 
 ```
 src/
+├── main.tsx         # Entry point and global API
 ├── widget.tsx       # Main widget component
 └── widget.css       # Widget styles
+types/
+└── global.d.ts      # Global type definitions
 ```
 
 ## 🎨 Features
 
 - **Lightweight**: Built with Preact
-- **Responsive**: Works on mobile and desktop
+- **Responsive**: Works on mobile and desktop  
 - **Themeable**: Light and dark themes
 - **Positioned**: Four corner positions
 - **Interactive**: Close button to hide widget
+- **Modern**: Uses DaisyUI design system
 
 ## 📖 API Reference
 
@@ -129,7 +134,7 @@ The widget automatically initializes when:
         subdomain: 'my-company'
       };
     </script>
-    <script src="widget.iife.js"></script>
+    <script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
   </body>
 </html>
 ```
@@ -144,7 +149,7 @@ The widget automatically initializes when:
     position: 'top-left'
   };
 </script>
-<script src="widget.iife.js"></script>
+<script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
 ```
 
 ## ❌ Error Handling

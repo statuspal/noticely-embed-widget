@@ -22,6 +22,6 @@
       "react-dom": ["./node_modules/preact/compat/"]
     }
   },
-  "include": ["src/**/*", "vite.config.ts", "eslint.config.js"],
+  "include": ["src/**/*", "vite.config.ts", "eslint.config.js", "**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
