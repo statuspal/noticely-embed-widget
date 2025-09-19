@@ -3,6 +3,7 @@ import preact from '@preact/preset-vite';
 import { resolve } from 'path';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import compression from 'vite-plugin-compression';
+import tailwindcss from '@tailwindcss/vite';
 
 // Shared build configuration
 const createBuildConfig = (isDev = false) => ({
@@ -19,11 +20,11 @@ const createBuildConfig = (isDev = false) => ({
       manualChunks: undefined
     }
   },
-  chunkSizeWarningLimit: 20
+  chunkSizeWarningLimit: 100
 });
 
 // Auto-rebuild plugin for development
-const autoRebuildWidget = () => {
+const autoRebuild = () => {
   let isBuilding = false;
 
   return {
@@ -33,7 +34,7 @@ const autoRebuildWidget = () => {
         isBuilding = true;
 
         build({
-          plugins: [preact(), cssInjectedByJsPlugin()],
+          plugins: [preact(), tailwindcss(), cssInjectedByJsPlugin()],
           mode: 'development',
           build: createBuildConfig(true)
         }).finally(() => (isBuilding = false));
@@ -45,7 +46,7 @@ const autoRebuildWidget = () => {
 
 export default defineConfig(({ command, mode }) => {
   if (command === 'build') {
-    const plugins = [preact(), cssInjectedByJsPlugin()];
+    const plugins = [preact(), tailwindcss(), cssInjectedByJsPlugin()];
 
     // Only add compression plugin for production builds
     if (mode !== 'development')
@@ -67,7 +68,7 @@ export default defineConfig(({ command, mode }) => {
   }
 
   return {
-    plugins: [preact(), autoRebuildWidget()],
+    plugins: [preact(), tailwindcss(), autoRebuild()],
     server: {
       host: true,
       cors: true,

@@ -1,180 +1,41 @@
-/* Clean, minimal widget styles using actual Daisy UI CSS variables */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none)
+  scope(#noticely-widget-container);
 
-/* Daisy UI CSS Variables - Essential subset for widget */
-:root {
-  /* Base colors */
-  --base-100: 100% 0 0; /* base-100 */
-  --base-200: 96.1151% 0 0; /* base-200 */
-  --base-300: 92.4169% 0 0; /* base-300 */
-  --base-content: 13.8078% 0.006151 247.858; /* base-content */
+@source '../src';
 
-  /* Semantic colors */
-  --success: 64.8% 0.15 160; /* success */
-  --error: 71.76% 0.221 22.18; /* error */
-  --error-content: 100% 0 0; /* error-content */
+@plugin 'daisyui' {
+  root: '#noticely-widget-container';
 }
 
-[data-theme='dark'] {
-  /* Dark theme colors */
-  --base-100: 22.2% 0.014 252.89; /* base-100 */
-  --base-200: 19.6% 0.016 252.89; /* base-200 */
-  --base-300: 17.4% 0.014 252.89; /* base-300 */
-  --base-content: 74.6% 0.0216 264.436; /* base-content */
-
-  /* Semantic colors remain the same */
-  --success: 64.8% 0.15 160; /* success */
-  --error: 71.76% 0.221 22.18; /* error */
-  --error-content: 100% 0 0; /* error-content */
-}
-
-/* Widget reset for isolation */
-.status-widget,
-.status-widget * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Main widget container */
-.status-widget {
-  position: fixed;
-  z-index: 999999;
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    'Noto Sans',
-    sans-serif;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  width: 280px;
-  border-radius: 1rem;
-  box-shadow:
-    0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
-  background: oklch(var(--base-100));
-  border: 1px solid oklch(var(--base-300));
-  color: oklch(var(--base-content));
-  overflow: hidden;
-}
-
-/* Positioning */
-.status-widget--top-left {
-  top: 1rem;
-  left: 1rem;
-}
-.status-widget--top-right {
-  top: 1rem;
-  right: 1rem;
-}
-.status-widget--bottom-left {
-  bottom: 1rem;
-  left: 1rem;
-}
-.status-widget--bottom-right {
-  bottom: 1rem;
-  right: 1rem;
-}
-
-/* Widget header */
-.status-widget__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  background: oklch(var(--base-200));
-  border-bottom: 1px solid oklch(var(--base-300));
-}
-
-.status-widget__title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: oklch(var(--base-content));
-}
-
-/* Close button - styled like Daisy UI btn */
-.status-widget__close {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  color: oklch(var(--base-content));
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2rem;
-  min-width: 2rem;
-}
-
-.status-widget__close:hover {
-  background: oklch(var(--error));
-  color: oklch(var(--error-content));
-  transform: scale(1.05);
-}
-
-/* Widget content */
-.status-widget__content {
-  padding: 1rem;
-}
-
-.status-widget__status {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Status indicator - styled like Daisy UI badge */
-.status-widget__indicator {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  background: oklch(var(--success));
-  animation: pulse 2s infinite;
-  box-shadow: 0 0 0 2px oklch(var(--success) / 0.2);
-}
-
-.status-widget__message {
-  font-size: 0.875rem;
-  color: oklch(var(--base-content));
-  font-weight: 500;
-}
-
-/* Pulse animation - Daisy UI style */
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
+/* CSS variables for slide directions - scoped to the container */
+#noticely-widget-container {
+  .widget-slide-left {
+    --slide: -100%;
   }
-  50% {
-    opacity: 0.8;
+
+  .widget-slide-right {
+    --slide: 100%;
+  }
+
+  .notice-item-exit-active {
+    opacity: 0;
+    transform: translateX(var(--slide, 100%)) scale(0.9);
+    transition: 300ms ease-out;
+  }
+}
+
+/* Custom keyframes - cannot be replicated with Tailwind animations - scoped to container */
+@keyframes widget-enter {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--slide, 100%)) scale(0.95);
+  }
+  60% {
     transform: scale(1.05);
   }
-}
-
-/* Mobile responsive - using Daisy UI breakpoints */
-@media (max-width: 480px) {
-  .status-widget {
-    width: calc(100vw - 2rem);
-    left: 1rem !important;
-    right: 1rem !important;
-    margin: 0 auto;
-  }
-
-  .status-widget__content {
-    padding: 0.75rem; /* p-3 on mobile */
-  }
-
-  .status-widget__header {
-    padding: 0.5rem 0.75rem; /* p-2 px-3 on mobile */
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }

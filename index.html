@@ -65,7 +65,7 @@
           <div class="bg-base-300 rounded-lg p-4 overflow-x-auto">
             <pre class="text-sm"><code>&lt;script&gt;
   window.NoticelyWidgetConfig = {
-    subdomain: 'your-subdomain',
+    origin: 'https://status.noticely.io',
     theme: 'light', // or 'dark'
     position: 'bottom-right', // or 'bottom-left', 'top-right', 'top-left'
     enabled: true // set to false to disable the widget
@@ -79,7 +79,7 @@
 
     <script>
       window.NoticelyWidgetConfig = {
-        subdomain: 'demo-production'
+        origin: 'http://acme.spage.test:7070'
       };
     </script>
     <!-- We use the module version here for easier local development -->
@@ -90,33 +90,37 @@
 
       window.createBasicWidget = () => {
         window.NoticelyWidgetConfig = {
-          subdomain: 'demo-basic',
+          ...window.NoticelyWidgetConfig,
           theme: 'light',
-          position: 'bottom-right'
+          position: 'bottom-right',
+          enabled: true
         };
         window.NoticelyWidget.create();
       };
 
       window.createDarkWidget = () => {
         window.NoticelyWidgetConfig = {
-          subdomain: 'demo-dark',
+          ...window.NoticelyWidgetConfig,
           theme: 'dark',
-          position: 'bottom-left'
+          position: 'bottom-left',
+          enabled: true
         };
         window.NoticelyWidget.create();
       };
 
       window.createTopWidget = () => {
         window.NoticelyWidgetConfig = {
-          subdomain: 'demo-top',
+          ...window.NoticelyWidgetConfig,
           theme: 'light',
-          position: 'top-right'
+          position: 'top-right',
+          enabled: true
         };
         window.NoticelyWidget.create();
       };
 
       window.clearWidgets = () => {
         window.NoticelyWidgetConfig = {
+          ...window.NoticelyWidgetConfig,
           enabled: false
         };
         window.NoticelyWidget.create();

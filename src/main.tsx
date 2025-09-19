@@ -5,11 +5,15 @@ const NOTICELY_WIDGET_CONTAINER_ID = 'noticely-widget-container';
 
 // Global API setup
 window.NoticelyWidget = {
-  create: (): void => {
+  create: async (): Promise<void> => {
     // Read configuration from global window object
-    if (!window.NoticelyWidgetConfig) {
+    if (
+      !window.NoticelyWidgetConfig ||
+      typeof window.NoticelyWidgetConfig !== 'object' ||
+      !window.NoticelyWidgetConfig.origin
+    ) {
       console.error(
-        'Noticely Widget: Configuration not found. Please provide window.NoticelyWidgetConfig with at least a subdomain property.'
+        'Noticely Widget: Configuration not found. Please provide `window.NoticelyWidgetConfig` object with at least a `origin` property.'
       );
       return;
     }
@@ -18,7 +22,18 @@ window.NoticelyWidget = {
     window.NoticelyWidget.destroy();
 
     // Check if widget is enabled (default true)
-    if (window.NoticelyWidgetConfig.enabled === false) return;
+    if (
+      'enabled' in window.NoticelyWidgetConfig &&
+      !window.NoticelyWidgetConfig.enabled
+    )
+      return;
+
+    const response = await fetch(
+      `${window.NoticelyWidgetConfig.origin}/api/v1/status`
+    );
+    const data = await response.json();
+
+    if (!data.ongoing_notices.length) return;
 
     // Find existing container or create new one
     let container = document.getElementById(NOTICELY_WIDGET_CONTAINER_ID);
@@ -29,7 +44,7 @@ window.NoticelyWidget = {
     }
 
     // Render the widget into the container
-    render(<Widget {...window.NoticelyWidgetConfig} />, container);
+    render(<Widget {...data} />, container);
   },
   destroy: (): void => {
     // Find and remove the widget container

@@ -9,7 +9,7 @@ A simple, embeddable status widget built with Preact. Shows a clean status indic
 ```html
 <script>
   window.NoticelyWidgetConfig = {
-    subdomain: 'your-subdomain' // Required for widget initialization
+    origin: 'https://status.noticely.io' // Required for widget initialization
   };
 </script>
 ```
@@ -26,7 +26,7 @@ The widget automatically appears when the page loads!
 
 ### Required
 
-- **`subdomain`** (string): Required for widget initialization
+- **`origin`** (string): Required for widget initialization
 
 ### Optional (with defaults)
 
@@ -40,7 +40,7 @@ The widget automatically appears when the page loads!
 
 ```javascript
 window.NoticelyWidgetConfig = {
-  subdomain: 'my-company', // Required
+  origin: 'https://status.noticely.io', // Required
   position: 'top-right', // Optional
   theme: 'dark', // Optional
   enabled: true // Optional - set to false to disable the widget
@@ -112,7 +112,7 @@ window.NoticelyWidget = {
 
 The widget automatically initializes when:
 
-1. `window.NoticelyWidgetConfig` is defined with a `subdomain`
+1. `window.NoticelyWidgetConfig` is defined with a `origin`
 2. The DOM is ready
 3. `enabled` is not `false`
 
@@ -131,7 +131,7 @@ The widget automatically initializes when:
 
     <script>
       window.NoticelyWidgetConfig = {
-        subdomain: 'my-company'
+        origin: 'https://status.noticely.io'
       };
     </script>
     <script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
@@ -144,7 +144,7 @@ The widget automatically initializes when:
 ```html
 <script>
   window.NoticelyWidgetConfig = {
-    subdomain: 'my-company',
+    origin: 'https://status.noticely.io',
     theme: 'dark',
     position: 'top-left'
   };
@@ -154,7 +154,7 @@ The widget automatically initializes when:
 
 ## ❌ Error Handling
 
-If `window.NoticelyWidgetConfig` is missing or doesn't have a `subdomain`:
+If `window.NoticelyWidgetConfig` is missing or doesn't have a `origin`:
 
 - Console error is logged with helpful message
 - Widget doesn't initialize
