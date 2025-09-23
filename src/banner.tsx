@@ -67,7 +67,7 @@ const Banner = ({
       if (!isClosing) return;
 
       if (ongoingNotices.length === 1) {
-        window.NoticelyWidget.destroy();
+        window.NoticelyWidget.destroy({ onlyBanner: true });
         return;
       }
 

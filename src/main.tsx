@@ -83,12 +83,8 @@ window.NoticelyWidget = {
       );
     }
   },
-  destroy: (): void => {
+  destroy: (options = {}): void => {
     const config = window.NoticelyWidget.getConfig();
-
-    document
-      .querySelectorAll(config.badge.selector)
-      .forEach(element => render(null, element));
 
     // Find and remove the banner container
     const container = document.getElementById(NOTICELY_BANNER_CONTAINER_ID);
@@ -96,6 +92,12 @@ window.NoticelyWidget = {
       render(null, container);
       container.parentNode.removeChild(container);
     }
+
+    if (options.onlyBanner) return;
+
+    document
+      .querySelectorAll(config.badge.selector)
+      .forEach(element => render(null, element));
   },
   getConfig: (): ReturnType<typeof window.NoticelyWidget.getConfig> => {
     const {

@@ -6,7 +6,7 @@ type BadgePlacement = 'top' | 'bottom' | 'left' | 'right';
 declare interface Window {
   NoticelyWidget: {
     create: () => Promise<void>;
-    destroy: () => void;
+    destroy: (options?: { onlyBanner?: boolean }) => void;
     getConfig: () => {
       origin?: string;
       globalEnabled: boolean;

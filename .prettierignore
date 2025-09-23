@@ -19,6 +19,3 @@ Thumbs.db
 # IDE files
 .vscode/
 .idea/
-
-# GitHub Actions workflows (use YAML-specific formatting)
-.github/workflows/
