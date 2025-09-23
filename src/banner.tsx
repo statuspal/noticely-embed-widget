@@ -1,17 +1,28 @@
 import './banner.css';
-import { StatusResponse } from 'types/general';
+import { Fragment } from 'preact';
 import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
+import { StatusResponse } from 'types/general';
 import { NOTICELY_BANNER_LOCAL_STORAGE_KEY } from './main';
 import ExclamationTriangleIcon from '@heroicons/react/24/solid/ExclamationTriangleIcon';
 import WrenchIcon from '@heroicons/react/24/solid/WrenchIcon';
 import XMarkIcon from '@heroicons/react/24/solid/XMarkIcon';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { statusColors } from './helpers';
 
 dayjs.extend(duration);
 
 // Main banner component - displays status information with controls
-export const Banner = ({ ongoing_notices, services }: StatusResponse) => {
+const Banner = ({
+  data: { ongoing_notices, services },
+  config: {
+    origin,
+    banner: { position, theme }
+  }
+}: {
+  data: StatusResponse;
+  config: ReturnType<typeof window.NoticelyWidget.getConfig>;
+}) => {
   const [ongoingNotices, setOngoingNotices] = useState([...ongoing_notices]);
   const [currentNotice, setCurrentNotice] = useState(ongoingNotices[0]);
   const [isClosing, setIsClosing] = useState(false);
@@ -94,12 +105,6 @@ export const Banner = ({ ongoing_notices, services }: StatusResponse) => {
     [ongoingNotices, ongoingNotices.length]
   );
 
-  const {
-    origin,
-    position = 'bottom-right',
-    theme = 'auto'
-  } = window.NoticelyWidgetConfig;
-
   // Position classes for Tailwind
   const positionClasses = {
     'top-left': 'top-8 left-8',
@@ -128,14 +133,6 @@ export const Banner = ({ ongoing_notices, services }: StatusResponse) => {
       );
   };
 
-  const noticeColors = (): string => {
-    if (currentNotice.notice_type === 'maintenance')
-      return 'bg-info text-info-content';
-    if (!currentNotice.severity || currentNotice.severity === 'major')
-      return 'bg-error text-error-content';
-    return 'bg-warning text-warning-content';
-  };
-
   return (
     <div
       className={`
@@ -151,7 +148,7 @@ export const Banner = ({ ongoing_notices, services }: StatusResponse) => {
         ref={bannerRef}
         className={`
           bg-base-100 rounded shadow-2xl flex p-4 gap-5
-          ${noticeColors()}
+          ${statusColors(currentNotice.notice_type, currentNotice.severity)}
           ${
             isClosing
               ? 'animate-[banner-exit_0.3s_ease-in_forwards]'
@@ -161,7 +158,7 @@ export const Banner = ({ ongoing_notices, services }: StatusResponse) => {
           }
         `}
       >
-        <IconComponent className="w-8 h-8 min-w-fit" />
+        <IconComponent className="size-8 min-w-fit" />
 
         <div className="flex flex-col gap-3">
           <div className="flex justify-between gap-3">
@@ -172,13 +169,13 @@ export const Banner = ({ ongoing_notices, services }: StatusResponse) => {
               title="Close"
               aria-label="Close banner"
             >
-              <XMarkIcon className="w-5 h-5" />
+              <XMarkIcon className="size-5" />
             </button>
           </div>
 
           <span className="leading-4">
             {Object.keys(currentNotice.affected_services).length ? (
-              <>
+              <Fragment>
                 Affected services:{' '}
                 <i>
                   {Object.entries(currentNotice.affected_services)
@@ -188,7 +185,7 @@ export const Banner = ({ ongoing_notices, services }: StatusResponse) => {
                     )
                     .join('. ')}
                 </i>
-              </>
+              </Fragment>
             ) : (
               'No affected services'
             )}

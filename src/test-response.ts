@@ -1,6 +1,12 @@
 import { StatusResponse } from 'types/general';
 
 export default {
+  status_page: {
+    current_status: {
+      notice_type: 'incident',
+      severity: 'major'
+    }
+  },
   services: [
     {
       id: 'd3a3c5b2-78ee-481b-8f91-9db57e1cec8f',
