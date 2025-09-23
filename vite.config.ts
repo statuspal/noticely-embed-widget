@@ -70,7 +70,6 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [preact(), tailwindcss(), autoRebuild()],
     server: {
-      host: true,
       cors: true,
       port: 5173
     }

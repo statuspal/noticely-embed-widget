@@ -1,20 +1,20 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none)
-  scope(#noticely-widget-container);
+  scope(#noticely-banner-container);
 
 @source '../src';
 
 @plugin 'daisyui' {
-  root: '#noticely-widget-container';
+  root: '#noticely-banner-container';
 }
 
 /* CSS variables for slide directions - scoped to the container */
-#noticely-widget-container {
-  .widget-slide-left {
+#noticely-banner-container {
+  .banner-slide-left {
     --slide: -100%;
   }
 
-  .widget-slide-right {
+  .banner-slide-right {
     --slide: 100%;
   }
 
@@ -26,7 +26,7 @@
 }
 
 /* Custom keyframes - cannot be replicated with Tailwind animations - scoped to container */
-@keyframes widget-enter {
+@keyframes banner-enter {
   0% {
     opacity: 0;
     transform: translateX(var(--slide, 100%)) scale(0.95);
@@ -37,5 +37,25 @@
   100% {
     opacity: 1;
     transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes banner-exit {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(var(--slide, 100%)) scale(0.9);
+  }
+}
+
+@keyframes banner-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

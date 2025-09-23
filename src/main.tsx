@@ -1,7 +1,10 @@
 import { render } from 'preact';
-import Widget from './widget';
+import { StatusResponse } from 'types/general';
+import Banner from './banner';
+import testResponse from './test-response';
 
-const NOTICELY_WIDGET_CONTAINER_ID = 'noticely-widget-container';
+export const NOTICELY_BANNER_CONTAINER_ID = 'noticely-banner-container';
+export const NOTICELY_BANNER_LOCAL_STORAGE_KEY = 'noticely-viewed-notices';
 
 // Global API setup
 window.NoticelyWidget = {
@@ -13,42 +16,58 @@ window.NoticelyWidget = {
       !window.NoticelyWidgetConfig.origin
     ) {
       console.error(
-        'Noticely Widget: Configuration not found. Please provide `window.NoticelyWidgetConfig` object with at least a `origin` property.'
+        'Noticely Banner: Configuration not found. Please provide `window.NoticelyWidgetConfig` object with at least a `origin` property.'
       );
       return;
     }
 
-    // Destroy existing widget first
+    // Destroy existing banner first
     window.NoticelyWidget.destroy();
 
-    // Check if widget is enabled (default true)
+    // Check if banner is enabled (default true)
     if (
       'enabled' in window.NoticelyWidgetConfig &&
       !window.NoticelyWidgetConfig.enabled
     )
       return;
 
-    const response = await fetch(
-      `${window.NoticelyWidgetConfig.origin}/api/v1/status`
-    );
-    const data = await response.json();
+    let data: StatusResponse;
+    try {
+      const response = await fetch(
+        `${window.NoticelyWidgetConfig.origin}/api/v1/status`
+      );
+      data = await response.json();
+    } catch (error) {
+      if (process.env.NODE_ENV === 'production') {
+        console.error(error);
+        return;
+      }
 
+      data = testResponse;
+    }
+
+    const viewedNoticeIds = JSON.parse(
+      localStorage.getItem(NOTICELY_BANNER_LOCAL_STORAGE_KEY) || '[]'
+    );
+    data.ongoing_notices = data.ongoing_notices.filter(
+      notice => !viewedNoticeIds.includes(notice.id)
+    );
     if (!data.ongoing_notices.length) return;
 
     // Find existing container or create new one
-    let container = document.getElementById(NOTICELY_WIDGET_CONTAINER_ID);
+    let container = document.getElementById(NOTICELY_BANNER_CONTAINER_ID);
     if (!container) {
       container = document.createElement('div');
-      container.id = NOTICELY_WIDGET_CONTAINER_ID;
+      container.id = NOTICELY_BANNER_CONTAINER_ID;
       document.body.appendChild(container);
     }
 
-    // Render the widget into the container
-    render(<Widget {...data} />, container);
+    // Render the banner into the container
+    render(<Banner {...data} />, container);
   },
   destroy: (): void => {
-    // Find and remove the widget container
-    const container = document.getElementById(NOTICELY_WIDGET_CONTAINER_ID);
+    // Find and remove the banner container
+    const container = document.getElementById(NOTICELY_BANNER_CONTAINER_ID);
     if (container?.parentNode) {
       render(null, container);
       container.parentNode.removeChild(container);

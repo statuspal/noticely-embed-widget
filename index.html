@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noticely Widget Demo</title>
+    <title>Noticely Widget and Banner Demo</title>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
       rel="stylesheet"
@@ -19,11 +19,11 @@
         <div class="hero-content text-center">
           <div class="max-w-md">
             <h1 class="text-5xl font-bold text-base-content">
-              Noticely Widget
+              Noticely Widget and Banner Demo
             </h1>
             <p class="py-6 text-base-content/70">
-              Embeddable status widget built with Preact and DaisyUI design
-              system
+              Embeddable status widget and banner built with Preact and DaisyUI
+              design system
             </p>
           </div>
         </div>
@@ -33,22 +33,22 @@
         <div class="card-body">
           <h3 class="card-title text-xl">🧪 Interactive Demo</h3>
           <p class="text-base-content/80 mb-4">
-            Test the widget with different configurations (each button changes
+            Test the banner with different configurations (each button changes
             <code class="badge">window.NoticelyWidgetConfig</code> and reloads
-            the widget):
+            the banner):
           </p>
           <div class="card-actions">
-            <button class="btn btn-primary" onclick="createBasicWidget()">
-              Basic Widget
+            <button class="btn btn-primary" onclick="createBasicBanner()">
+              Basic Banner
             </button>
-            <button class="btn btn-primary" onclick="createDarkWidget()">
+            <button class="btn btn-primary" onclick="createDarkBanner()">
               Dark Theme
             </button>
-            <button class="btn btn-primary" onclick="createTopWidget()">
+            <button class="btn btn-primary" onclick="createTopBanner()">
               Top Position
             </button>
-            <button class="btn btn-secondary" onclick="clearWidgets()">
-              Disable Widget
+            <button class="btn btn-secondary" onclick="clearBanner()">
+              Disable Banner
             </button>
           </div>
         </div>
@@ -58,7 +58,7 @@
         <div class="card-body">
           <h3 class="card-title text-xl">📋 Production Usage</h3>
           <p class="text-base-content/80 mb-4">
-            This demo shows how the widget works in production. The widget
+            This demo shows how the banner works in production. The banner
             automatically initializes based on
             <code class="badge">window.NoticelyWidgetConfig</code>.
           </p>
@@ -66,12 +66,12 @@
             <pre class="text-sm"><code>&lt;script&gt;
   window.NoticelyWidgetConfig = {
     origin: 'https://status.noticely.io',
-    theme: 'light', // or 'dark'
+    theme: 'auto', // or 'dark', 'light'
     position: 'bottom-right', // or 'bottom-left', 'top-right', 'top-left'
-    enabled: true // set to false to disable the widget
+    enabled: true // set to false to disable the banner
   };
 &lt;/script&gt;
-&lt;script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"&gt;&lt;/script&gt;</code></pre>
+&lt;script src="https://github.com/statuspal/noticely-embed-banner/releases/latest/download/main.iife.js"&gt;&lt;/script&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -86,19 +86,19 @@
     <script type="module" src="/src/main.tsx"></script>
 
     <script>
-      // Demo functions that change config and reload widget
+      // Demo functions that change config and reload banner
 
-      window.createBasicWidget = () => {
+      window.createBasicBanner = () => {
         window.NoticelyWidgetConfig = {
           ...window.NoticelyWidgetConfig,
-          theme: 'light',
+          theme: 'auto',
           position: 'bottom-right',
           enabled: true
         };
         window.NoticelyWidget.create();
       };
 
-      window.createDarkWidget = () => {
+      window.createDarkBanner = () => {
         window.NoticelyWidgetConfig = {
           ...window.NoticelyWidgetConfig,
           theme: 'dark',
@@ -108,7 +108,7 @@
         window.NoticelyWidget.create();
       };
 
-      window.createTopWidget = () => {
+      window.createTopBanner = () => {
         window.NoticelyWidgetConfig = {
           ...window.NoticelyWidgetConfig,
           theme: 'light',
@@ -118,7 +118,7 @@
         window.NoticelyWidget.create();
       };
 
-      window.clearWidgets = () => {
+      window.clearBanner = () => {
         window.NoticelyWidgetConfig = {
           ...window.NoticelyWidgetConfig,
           enabled: false

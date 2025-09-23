@@ -4,10 +4,10 @@ declare interface Window {
     create: () => Promise<void>;
     destroy: () => void;
   };
-  NoticelyWidgetConfig?: {
+  NoticelyWidgetConfig: {
     origin: string;
     position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     enabled?: boolean;
-    theme?: 'light' | 'dark';
+    theme?: 'auto' | 'light' | 'dark';
   };
 }

@@ -12,8 +12,9 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
   "dependencies": {
-    "preact": "^10.26.9",
-    "preact-transitioning": "^1.5.2"
+    "@heroicons/react": "^2.2.0",
+    "dayjs": "^1.11.18",
+    "preact": "^10.26.9"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
