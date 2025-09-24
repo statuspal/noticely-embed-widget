@@ -9,7 +9,7 @@ export const NOTICELY_BANNER_CONTAINER_ID = 'noticely-banner-container';
 export const NOTICELY_BANNER_LOCAL_STORAGE_KEY = 'noticely-viewed-notices';
 export const NOTICELY_BADGE_CONTAINER_CLASS = 'noticely-badge';
 export const NOTICELY_CLOSE_BANNER_EVENT = 'noticely-close-banner';
-export const REFRESH_INTERVAL = 10000; // ms
+export const REFRESH_INTERVAL = 60000; // ms
 
 // eslint-disable-next-line no-undef
 let interval: NodeJS.Timeout | null = null;
@@ -183,7 +183,8 @@ const renderWidget = async (
       container.classList.add(
         NOTICELY_BADGE_CONTAINER_CLASS,
         'align-middle',
-        'ml-2'
+        'ml-2',
+        'inline-flex'
       );
       badgeElement.appendChild(container);
     } else {

@@ -1,6 +1,6 @@
-# Status Widget
+# Noticely Embed Widget
 
-A simple, embeddable status widget built with Preact. Shows a clean status indicator that can be positioned anywhere on your website.
+A lightweight, embeddable status widget and badge built with Preact. Shows status banners and badges that can be positioned anywhere on your website.
 
 ## 🚀 Quick Start
 
@@ -9,7 +9,9 @@ A simple, embeddable status widget built with Preact. Shows a clean status indic
 ```html
 <script>
   window.NoticelyWidgetConfig = {
-    origin: 'https://status.noticely.io' // Required for widget initialization
+    origin: 'https://status.noticely.io', // Required
+    banner: { enabled: true }, // Enable status banner
+    badge: { enabled: true, selector: '.noticely-badge-container' } // Enable status badge
   };
 </script>
 ```
@@ -20,30 +22,59 @@ A simple, embeddable status widget built with Preact. Shows a clean status indic
 <script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
 ```
 
+### 3. Add Badge Container (Optional)
+
+```html
+<a href="https://status.noticely.io" class="noticely-badge-container">Status</a>
+```
+
 The widget automatically appears when the page loads!
 
 ## ⚙️ Configuration Options
 
 ### Required
 
-- **`origin`** (string): Required for widget initialization
+- **`origin`** (string): Your status page URL
 
-### Optional (with defaults)
+### Global Options
+
+| Option    | Default  | Description                              |
+| --------- | -------- | ---------------------------------------- |
+| `enabled` | `true`   | Global enable/disable for all components |
+| `theme`   | `'auto'` | `'auto'`, `'light'`, or `'dark'` theme   |
+
+### Banner Options (`banner` object)
 
 | Option     | Default          | Description                                                    |
 | ---------- | ---------------- | -------------------------------------------------------------- |
+| `enabled`  | `true`           | Show/hide status banner                                        |
 | `position` | `'bottom-right'` | `'top-left'`, `'top-right'`, `'bottom-left'`, `'bottom-right'` |
-| `enabled`  | `true`           | `true`/`false` - whether to show the widget                    |
-| `theme`    | `'light'`        | `'light'` or `'dark'` theme                                    |
+| `theme`    | inherits global  | Theme override for banner                                      |
+
+### Badge Options (`badge` object)
+
+| Option      | Default                       | Description                                                 |
+| ----------- | ----------------------------- | ----------------------------------------------------------- |
+| `enabled`   | `false`                       | Show/hide status badges                                     |
+| `selector`  | `'.noticely-badge-container'` | CSS selector for badge containers                           |
+| `placement` | `'right'`                     | Tooltip placement: `'top'`, `'bottom'`, `'left'`, `'right'` |
+| `theme`     | inherits global               | Theme override for badge                                    |
 
 ### Example Configuration
 
 ```javascript
 window.NoticelyWidgetConfig = {
-  origin: 'https://status.noticely.io', // Required
-  position: 'top-right', // Optional
-  theme: 'dark', // Optional
-  enabled: true // Optional - set to false to disable the widget
+  origin: 'https://status.noticely.io',
+  theme: 'dark',
+  banner: {
+    enabled: true,
+    position: 'top-right'
+  },
+  badge: {
+    enabled: true,
+    selector: '.status-badge',
+    placement: 'top'
+  }
 };
 ```
 
@@ -58,7 +89,7 @@ window.NoticelyWidgetConfig = {
 
 ```bash
 npm install
-npm run dev    # Development server at http://localhost:5173 with demo page
+npm run dev    # Development server at http://localhost:5173
 ```
 
 ### Build
@@ -67,43 +98,42 @@ npm run dev    # Development server at http://localhost:5173 with demo page
 npm run build  # Creates main.iife.js in dist/
 ```
 
-### Testing
-
-Open http://localhost:5173 during development to see the demo page with interactive controls.
-
 ## 📁 Project Structure
 
 ```
 src/
 ├── main.tsx         # Entry point and global API
-├── widget.tsx       # Main widget component
-└── widget.css       # Widget styles
-types/
-└── global.d.ts      # Global type definitions
+├── banner.tsx       # Status banner component
+├── badge.tsx        # Status badge component
+├── helpers.ts       # Shared utilities
+└── *.css           # Component styles
 ```
 
 ## 🎨 Features
 
-- **Lightweight**: Built with Preact
-- **Responsive**: Works on mobile and desktop
-- **Themeable**: Light and dark themes
-- **Positioned**: Four corner positions
-- **Interactive**: Close button to hide widget
-- **Modern**: Uses DaisyUI design system
+- **Lightweight**: Built with Preact (~15KB gzipped)
+- **Dual Components**: Status banner + badge system
+- **Responsive**: Mobile and desktop optimized
+- **Themeable**: Auto, light, and dark themes
+- **Positioned**: Multiple positioning options
+- **Interactive**: Close buttons and tooltips
+- **Real-time**: Auto-refresh every minute
 
 ## 📖 API Reference
 
 ### Global API
 
-The widget provides a simple global API:
-
 ```javascript
 window.NoticelyWidget = {
   create: function () {
-    // Creates/recreates the widget using window.NoticelyWidgetConfig
+    // Creates/recreates widget using window.NoticelyWidgetConfig
   },
-  destroy: function () {
-    // Removes the widget from the page
+  destroy: function (options) {
+    // Removes widget from page
+    // options: { onlyBanner?: boolean, animationEnded?: boolean }
+  },
+  getConfig: function () {
+    // Returns processed configuration
   }
 };
 ```
@@ -112,26 +142,29 @@ window.NoticelyWidget = {
 
 The widget automatically initializes when:
 
-1. `window.NoticelyWidgetConfig` is defined with a `origin`
-2. The DOM is ready
-3. `enabled` is not `false`
+1. `window.NoticelyWidgetConfig` is defined with `origin`
+2. DOM is ready
+3. At least one component is enabled
 
 ## 🔧 Usage Examples
 
-### Basic HTML
+### Banner + Badge
 
 ```html
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>My Website</title>
-  </head>
   <body>
-    <h1>Welcome</h1>
+    <header>
+      <a href="https://status.noticely.io" class="noticely-badge-container"
+        >System Status</a
+      >
+    </header>
 
     <script>
       window.NoticelyWidgetConfig = {
-        origin: 'https://status.noticely.io'
+        origin: 'https://status.noticely.io',
+        banner: { enabled: true, position: 'bottom-right' },
+        badge: { enabled: true }
       };
     </script>
     <script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
@@ -139,39 +172,50 @@ The widget automatically initializes when:
 </html>
 ```
 
-### With Custom Theme & Position
+### Banner Only
 
 ```html
 <script>
   window.NoticelyWidgetConfig = {
     origin: 'https://status.noticely.io',
-    theme: 'dark',
-    position: 'top-left'
+    banner: { enabled: true },
+    badge: { enabled: false }
   };
 </script>
-<script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
+```
+
+### Custom Badge Selector
+
+```html
+<nav>
+  <span class="status-indicator">Status</span>
+</nav>
+
+<script>
+  window.NoticelyWidgetConfig = {
+    origin: 'https://status.noticely.io',
+    badge: {
+      enabled: true,
+      selector: '.status-indicator'
+    }
+  };
+</script>
 ```
 
 ## ❌ Error Handling
 
-If `window.NoticelyWidgetConfig` is missing or doesn't have a `origin`:
-
-- Console error is logged with helpful message
-- Widget doesn't initialize
-- No DOM elements are created
-
-If `enabled: false`:
-
-- Widget doesn't render
-- No console errors
+- Missing `origin`: Console error, no initialization
+- Missing badge containers: Console error for badge selector
+- API failures: Fallback to test data in development
+- Network issues: Automatic retry every minute
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b my-feature`
+2. Create feature branch: `git checkout -b feature-name`
 3. Make changes and test with `npm run dev`
 4. Format code: `npm run format`
-5. Submit a pull request
+5. Submit pull request
 
 ## 📄 License
 
