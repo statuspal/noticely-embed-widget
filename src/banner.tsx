@@ -1,8 +1,11 @@
 import './banner.css';
 import { Fragment } from 'preact';
-import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import { StatusResponse } from 'types/general';
-import { NOTICELY_BANNER_LOCAL_STORAGE_KEY } from './main';
+import {
+  NOTICELY_BANNER_LOCAL_STORAGE_KEY,
+  NOTICELY_CLOSE_BANNER_EVENT
+} from './main';
 import ExclamationTriangleIcon from '@heroicons/react/24/solid/ExclamationTriangleIcon';
 import WrenchIcon from '@heroicons/react/24/solid/WrenchIcon';
 import XMarkIcon from '@heroicons/react/24/solid/XMarkIcon';
@@ -18,10 +21,12 @@ const Banner = ({
   config: {
     origin,
     banner: { position, theme }
-  }
+  },
+  options = {}
 }: {
   data: StatusResponse;
   config: ReturnType<typeof window.NoticelyWidget.getConfig>;
+  options?: { noEnterAnimation?: boolean };
 }) => {
   const [ongoingNotices, setOngoingNotices] = useState([...ongoing_notices]);
   const [currentNotice, setCurrentNotice] = useState(ongoingNotices[0]);
@@ -29,45 +34,17 @@ const Banner = ({
 
   const bannerRef = useRef<HTMLDivElement>(null);
 
-  const humanizedDuration = useCallback((): string => {
-    const diff = dayjs.duration(dayjs().diff(dayjs(currentNotice.starts_at)));
-    const parts = [];
-
-    const formatUnit = (value: number, unit: string): string =>
-      value === 1 ? `${value} ${unit}` : `${value} ${unit}s`;
-
-    if (diff.asMinutes() < 1) {
-      parts.push(formatUnit(Math.max(0, diff.seconds()), 'second'));
-    } else {
-      const d = diff.days(),
-        h = diff.hours(),
-        m = diff.minutes();
-      if (d) parts.push(formatUnit(d, 'day'));
-      if (h) parts.push(formatUnit(h, 'hour'));
-      if (m) parts.push(formatUnit(m, 'minute'));
-    }
-
-    const duration = parts.join(' ');
-
-    return currentNotice.notice_type === 'maintenance'
-      ? `Started at: ${dayjs(currentNotice.starts_at).format('YYYY-MM-DD HH:mm')}${currentNotice.ends_at ? ` · Duration: ${duration}` : ''}`
-      : `Ongoing for ${duration}`;
-  }, [
-    currentNotice.starts_at,
-    currentNotice.ends_at,
-    currentNotice.notice_type
-  ]);
-
-  const [durationLabel, setDurationLabel] = useState(humanizedDuration());
-
   useEffect(() => {
     const bannerElement = bannerRef.current;
 
     const handleAnimationEnd = () => {
       if (!isClosing) return;
 
-      if (ongoingNotices.length === 1) {
-        window.NoticelyWidget.destroy({ onlyBanner: true });
+      if (ongoingNotices.length < 2) {
+        window.NoticelyWidget.destroy({
+          onlyBanner: true,
+          animationEnded: true
+        });
         return;
       }
 
@@ -84,26 +61,21 @@ const Banner = ({
       bannerElement.removeEventListener('animationend', handleAnimationEnd);
   }, [isClosing, ongoingNotices.length]);
 
-  useEffect(() => {
-    /* eslint-disable no-undef */
-    let durationLabelInterval: NodeJS.Timeout;
-    if (currentNotice.notice_type !== 'maintenance')
-      durationLabelInterval = setInterval(
-        () => setDurationLabel(humanizedDuration()),
-        60000
-      );
-
-    return () => {
-      if (durationLabelInterval) clearInterval(durationLabelInterval);
-    };
-  }, [currentNotice.notice_type, humanizedDuration]);
-
-  useEffect(() => setDurationLabel(humanizedDuration()), [humanizedDuration]);
-
   useEffect(
     () => setCurrentNotice(ongoingNotices[0]),
     [ongoingNotices, ongoingNotices.length]
   );
+
+  useEffect(() => {
+    const handleCloseBanner = () => setIsClosing(true);
+    window.addEventListener(NOTICELY_CLOSE_BANNER_EVENT, handleCloseBanner);
+
+    return () =>
+      window.removeEventListener(
+        NOTICELY_CLOSE_BANNER_EVENT,
+        handleCloseBanner
+      );
+  }, []);
 
   // Position classes for Tailwind
   const positionClasses = {
@@ -133,11 +105,37 @@ const Banner = ({
       );
   };
 
+  const humanizedDuration = (): string => {
+    const diff = dayjs.duration(dayjs().diff(dayjs(currentNotice.starts_at)));
+    const parts = [];
+
+    const formatUnit = (value: number, unit: string): string =>
+      value === 1 ? `${value} ${unit}` : `${value} ${unit}s`;
+
+    if (diff.asMinutes() < 1) {
+      parts.push(formatUnit(Math.max(0, diff.seconds()), 'second'));
+    } else {
+      const d = diff.days(),
+        h = diff.hours(),
+        m = diff.minutes();
+
+      if (d) parts.push(formatUnit(d, 'day'));
+      if (h) parts.push(formatUnit(h, 'hour'));
+      if (m) parts.push(formatUnit(m, 'minute'));
+    }
+
+    const duration = parts.join(' ');
+
+    return currentNotice.notice_type === 'maintenance'
+      ? `Started at: ${dayjs(currentNotice.starts_at).format('YYYY-MM-DD HH:mm')}${currentNotice.ends_at ? ` · Duration: ${duration}` : ''}`
+      : `Ongoing for ${duration}`;
+  };
+
   return (
     <div
       className={`
         fixed z-[999999] max-w-96 font-sans bg-transparent leading-5
-        animate-[banner-enter_0.5s_cubic-bezier(0.34,1.56,0.64,1)]
+        ${!options.noEnterAnimation ? 'animate-[banner-enter_0.5s_cubic-bezier(0.34,1.56,0.64,1)]' : ''}
         max-sm:max-w-max max-sm:inset-x-4 max-sm:bottom-4
         ${positionClasses[position]}
         ${position.includes('right') ? 'banner-slide-right' : 'banner-slide-left'}
@@ -191,7 +189,7 @@ const Banner = ({
             )}
           </span>
 
-          <small className="leading-4">{durationLabel}</small>
+          <small className="leading-4">{humanizedDuration()}</small>
 
           <a
             href={`${origin}/notices/${currentNotice.id}`}

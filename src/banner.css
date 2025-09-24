@@ -7,12 +7,6 @@
   .banner-slide-right {
     --slide: 100%;
   }
-
-  .notice-item-exit-active {
-    opacity: 0;
-    transform: translateX(var(--slide, 100%)) scale(0.9);
-    transition: 300ms ease-out;
-  }
 }
 
 /* Custom keyframes - cannot be replicated with Tailwind animations - scoped to container */

@@ -7,10 +7,19 @@ import testResponse from './test-response';
 
 export const NOTICELY_BANNER_CONTAINER_ID = 'noticely-banner-container';
 export const NOTICELY_BANNER_LOCAL_STORAGE_KEY = 'noticely-viewed-notices';
+export const NOTICELY_BADGE_CONTAINER_CLASS = 'noticely-badge';
+export const NOTICELY_CLOSE_BANNER_EVENT = 'noticely-close-banner';
+export const REFRESH_INTERVAL = 10000; // ms
+
+// eslint-disable-next-line no-undef
+let interval: NodeJS.Timeout | null = null;
+let previousStatus = '';
 
 // Global API setup
 window.NoticelyWidget = {
   create: async (): Promise<void> => {
+    clearInterval(interval);
+
     // Read configuration from global window object
     const config = window.NoticelyWidget.getConfig();
 
@@ -27,77 +36,39 @@ window.NoticelyWidget = {
     // Check if widget is enabled (default true)
     if (!config.globalEnabled) return;
 
-    let data: StatusResponse;
-    try {
-      const response = await fetch(`${config.origin}/api/v1/status`);
-      data = await response.json();
-    } catch (error) {
-      if (process.env.NODE_ENV === 'production') {
-        console.error(error);
-        return;
-      }
-
-      data = testResponse;
-    }
-
-    if (config.banner.enabled) {
-      const viewedNoticeIds = JSON.parse(
-        localStorage.getItem(NOTICELY_BANNER_LOCAL_STORAGE_KEY) || '[]'
-      );
-      data.ongoing_notices = data.ongoing_notices.filter(
-        notice => !viewedNoticeIds.includes(notice.id)
-      );
-      if (!data.ongoing_notices.length) return;
-
-      // Find existing container or create new one
-      let container = document.getElementById(NOTICELY_BANNER_CONTAINER_ID);
-      if (!container) {
-        container = document.createElement('div');
-        container.id = NOTICELY_BANNER_CONTAINER_ID;
-        document.body.appendChild(container);
-      }
-
-      // Render the banner into the container
-      render(<Banner data={data} config={config} />, container);
-    }
-
-    if (config.badge.enabled) {
-      const badgeElements = document.querySelectorAll(config.badge.selector);
-
-      if (!badgeElements.length) {
-        console.error(
-          `Noticely Widget: No elements found for badge selector "${config.badge.selector}".`
-        );
-        return;
-      }
-
-      badgeElements.forEach(badgeElement =>
-        render(
-          <Badge
-            data={data}
-            config={config}
-            element={badgeElement as HTMLElement}
-          />,
-          badgeElement
-        )
-      );
-    }
+    await renderWidget();
+    interval = setInterval(
+      async () => await renderWidget({ noEnterAnimation: true }),
+      REFRESH_INTERVAL
+    );
   },
   destroy: (options = {}): void => {
+    if (options.onlyBanner && !options.animationEnded) {
+      window.dispatchEvent(new CustomEvent(NOTICELY_CLOSE_BANNER_EVENT));
+      return;
+    }
+
     const config = window.NoticelyWidget.getConfig();
 
     // Find and remove the banner container
     const container = document.getElementById(NOTICELY_BANNER_CONTAINER_ID);
-    if (container?.parentNode) {
+    if (container) {
       render(null, container);
-      container.parentNode.removeChild(container);
+      container.remove();
     }
 
     if (options.onlyBanner) return;
 
+    clearInterval(interval);
+
     document
-      .querySelectorAll(config.badge.selector)
-      .forEach(element => render(null, element));
+      .querySelectorAll(
+        `${config.badge.selector} .${NOTICELY_BADGE_CONTAINER_CLASS}`
+      )
+      .forEach(container => {
+        render(null, container);
+        container.remove();
+      });
   },
   getConfig: (): ReturnType<typeof window.NoticelyWidget.getConfig> => {
     const {
@@ -137,7 +108,104 @@ window.NoticelyWidget = {
   }
 };
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading')
-  document.addEventListener('DOMContentLoaded', window.NoticelyWidget.create);
-else window.NoticelyWidget.create();
+const renderWidget = async (
+  options: { noEnterAnimation?: boolean } = {}
+): Promise<void> => {
+  const config = window.NoticelyWidget.getConfig();
+
+  let data: StatusResponse;
+  try {
+    const response = await fetch(`${config.origin}/api/v1/status`);
+    data = await response.json();
+  } catch (error) {
+    console.error(error);
+    if (process.env.NODE_ENV === 'production') return;
+
+    data = testResponse;
+  }
+
+  if (config.banner.enabled) {
+    const viewedNoticeIds = JSON.parse(
+      localStorage.getItem(NOTICELY_BANNER_LOCAL_STORAGE_KEY) || '[]'
+    );
+    data.ongoing_notices = data.ongoing_notices.filter(
+      notice => !viewedNoticeIds.includes(notice.id)
+    );
+
+    if (data.ongoing_notices.length) {
+      // Find existing container or create new one
+      let container = document.getElementById(NOTICELY_BANNER_CONTAINER_ID);
+      const isInitialRender = !container;
+      if (!container) {
+        container = document.createElement('div');
+        container.id = NOTICELY_BANNER_CONTAINER_ID;
+        document.body.appendChild(container);
+      } else {
+        render(null, container); // Clear previous render
+      }
+
+      // Render the banner into the container
+      render(
+        <Banner
+          data={data}
+          config={config}
+          options={{
+            ...options,
+            noEnterAnimation: !isInitialRender && options.noEnterAnimation
+          }}
+        />,
+        container
+      );
+    } else {
+      window.NoticelyWidget.destroy({ onlyBanner: true });
+    }
+  }
+
+  if (!config.badge.enabled) return;
+
+  const badgeElements = document.querySelectorAll(config.badge.selector);
+
+  if (!badgeElements.length) {
+    console.error(
+      `Noticely Widget: No elements found for badge selector "${config.badge.selector}".`
+    );
+    return;
+  }
+
+  const currentStatus = JSON.stringify(data.status_page.current_status);
+
+  badgeElements.forEach(badgeElement => {
+    let container = badgeElement.querySelector(
+      `.${NOTICELY_BADGE_CONTAINER_CLASS}`
+    );
+    if (!container) {
+      container = document.createElement('span');
+      container.classList.add(
+        NOTICELY_BADGE_CONTAINER_CLASS,
+        'align-middle',
+        'ml-2'
+      );
+      badgeElement.appendChild(container);
+    } else {
+      render(null, container); // Clear previous render
+    }
+
+    render(
+      <Badge
+        data={data}
+        config={config}
+        element={badgeElement as HTMLElement}
+        options={{
+          ...options,
+          noEnterAnimation:
+            previousStatus === currentStatus && options.noEnterAnimation
+        }}
+      />,
+      container
+    );
+  });
+
+  previousStatus = currentStatus;
+};
+
+window.NoticelyWidget.create();

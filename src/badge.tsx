@@ -1,5 +1,5 @@
 import './badge.css';
-import { useEffect, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import { StatusResponse } from 'types/general';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -11,21 +11,15 @@ const Badge = ({
   config: {
     badge: { placement, theme }
   },
-  element
+  element,
+  options = {}
 }: {
   data: StatusResponse;
   config: ReturnType<typeof window.NoticelyWidget.getConfig>;
   element: HTMLElement;
+  options?: { noEnterAnimation?: boolean };
 }) => {
   const elementRef = useRef<HTMLElement>(element);
-
-  const existingContent = elementRef.current.innerHTML;
-  elementRef.current.innerHTML = '';
-
-  useEffect(
-    () => () => (elementRef.current.innerHTML = existingContent),
-    [existingContent]
-  );
 
   const getTheme = () => {
     if (theme === 'auto')
@@ -55,20 +49,21 @@ const Badge = ({
       theme={getTheme()}
       placement={placement}
     >
-      <div
-        className="noticely-badge inline-flex items-center gap-2 bg-transparent"
+      <span
+        className={`
+          inline-block size-4 rounded-full relative
+          ${!options.noEnterAnimation ? 'animate-[badge-enter_0.5s_cubic-bezier(0.34,1.56,0.64,1)]' : ''}
+          ${statusColors(status_page.current_status.notice_type, status_page.current_status.severity)}
+        `}
         {...(theme !== 'auto' ? { 'data-theme': theme } : {})}
       >
-        {/* eslint-disable react/no-danger */}
-        <div dangerouslySetInnerHTML={{ __html: existingContent }} />
         <span
-          className={`size-4 rounded-full relative animate-[badge-enter_0.5s_cubic-bezier(0.34,1.56,0.64,1)] ${statusColors(status_page.current_status.notice_type, status_page.current_status.severity)}`}
-        >
-          <span
-            className={`bg-inherit rounded-full animate-ping absolute inset-0 ${status_page.current_status.severity === 'ok' ? 'opacity-30' : 'opacity-50'}`}
-          />
-        </span>
-      </div>
+          className={`
+            bg-inherit rounded-full animate-ping absolute inset-0
+            ${status_page.current_status.severity === 'ok' ? 'opacity-30' : 'opacity-50'}
+          `}
+        />
+      </span>
     </Tippy>
   );
 };
