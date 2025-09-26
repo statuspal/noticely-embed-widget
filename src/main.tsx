@@ -63,7 +63,7 @@ window.NoticelyWidget = {
 
     document
       .querySelectorAll(
-        `${config.badge.selector} .${NOTICELY_BADGE_CONTAINER_CLASS}`
+        `:where(${config.badge.selector}) .${NOTICELY_BADGE_CONTAINER_CLASS}`
       )
       .forEach(container => {
         render(null, container);
@@ -209,4 +209,6 @@ const renderWidget = async (
   previousStatus = currentStatus;
 };
 
-window.NoticelyWidget.create();
+if (document.readyState === 'loading')
+  document.addEventListener('DOMContentLoaded', window.NoticelyWidget.create);
+else window.NoticelyWidget.create();

@@ -136,16 +136,17 @@ const Banner = ({
       className={`
         fixed z-[999999] max-w-96 font-sans bg-transparent leading-5
         ${!options.noEnterAnimation ? 'animate-[banner-enter_0.5s_cubic-bezier(0.34,1.56,0.64,1)]' : ''}
-        max-sm:max-w-max max-sm:inset-x-4 max-sm:bottom-4
+        max-sm:max-w-none max-sm:inset-x-4
         ${positionClasses[position]}
         ${position.includes('right') ? 'banner-slide-right' : 'banner-slide-left'}
+        ${position.includes('top') ? 'max-sm:top-4' : 'max-sm:bottom-4'}
       `}
       {...(theme !== 'auto' ? { 'data-theme': theme } : {})}
     >
       <div
         ref={bannerRef}
         className={`
-          bg-base-100 rounded shadow-2xl flex p-4 gap-5
+          rounded shadow-2xl flex p-4 max-sm:p-2 gap-5 max-sm:gap-3
           ${statusColors(currentNotice.notice_type, currentNotice.severity)}
           ${
             isClosing
@@ -158,7 +159,7 @@ const Banner = ({
       >
         <IconComponent className="size-8 min-w-fit" />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 max-sm:gap-2 w-full">
           <div className="flex justify-between gap-3">
             <strong>{currentNotice.title}</strong>
             <button
