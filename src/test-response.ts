@@ -1,4 +1,7 @@
 import { StatusResponse } from 'types/general';
+import dayjs from 'dayjs';
+
+const now = dayjs();
 
 export default {
   status_page: {
@@ -25,8 +28,12 @@ export default {
     {
       id: '6c3a609f-1cb2-4a99-94b6-2465060e1107',
       notice_type: 'incident',
-      starts_at: '2025-08-12T08:32:52.000Z',
-      ends_at: '2025-09-22T10:00:00.000Z',
+      starts_at: now
+        .subtract(2, 'days')
+        .add(2, 'hour')
+        .add(17, 'minutes')
+        .toISOString(),
+      ends_at: null,
       title: 'Demo major incident',
       severity: 'major',
       affected_services: {
@@ -37,7 +44,7 @@ export default {
     {
       id: '902a938f-c500-470a-90c3-42fc95f1eb47',
       notice_type: 'incident',
-      starts_at: '2025-09-22T15:18:06.385Z',
+      starts_at: now.subtract(1, 'hour').subtract(5, 'minutes').toISOString(),
       ends_at: null,
       title: 'Demo minor incident',
       severity: 'minor',
@@ -49,7 +56,7 @@ export default {
     {
       id: '39ab33bc-b554-411d-bf1f-008763944274',
       notice_type: 'incident',
-      starts_at: '2025-09-22T09:49:00.494Z',
+      starts_at: now.subtract(30, 'minutes').toISOString(),
       ends_at: null,
       title: 'Demo incident without severity',
       severity: '',
@@ -58,8 +65,8 @@ export default {
     {
       id: '92ab8b35-9bf5-4f9c-8326-6a8c34dea06b',
       notice_type: 'maintenance',
-      starts_at: '2025-09-22T15:18:00.000Z',
-      ends_at: '2025-10-22T15:18:00.000Z',
+      starts_at: now.subtract(30, 'minutes').toISOString(),
+      ends_at: now.add(30, 'minutes').toISOString(),
       title: 'Demo maintenance',
       severity: null,
       affected_services: {}

@@ -9,8 +9,8 @@ export type Notice = {
   title: string;
   notice_type: 'maintenance' | 'incident';
   starts_at: string;
-  ends_at: string;
-  severity: 'major' | 'minor' | '' | null;
+  ends_at?: string | null;
+  severity?: 'major' | 'minor' | '' | null;
   affected_services: { [key: string]: string[] };
 };
 

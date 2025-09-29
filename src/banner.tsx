@@ -106,7 +106,11 @@ const Banner = ({
   };
 
   const humanizedDuration = (): string => {
-    const diff = dayjs.duration(dayjs().diff(dayjs(currentNotice.starts_at)));
+    const diff = dayjs.duration(
+      dayjs(currentNotice.ends_at || undefined).diff(
+        dayjs(currentNotice.starts_at)
+      )
+    );
     const parts = [];
 
     const formatUnit = (value: number, unit: string): string =>
