@@ -119,10 +119,13 @@ const renderWidget = async (
     data = await response.json();
   } catch (error) {
     console.error(error);
-    if (process.env.NODE_ENV === 'production') return;
+    if (!window.NoticelyWidgetConfig.demo) return;
 
     data = testResponse;
   }
+
+  if (window.NoticelyWidgetConfig.demo && !data.ongoing_notices.length)
+    data = testResponse;
 
   if (config.banner.enabled) {
     const viewedNoticeIds = JSON.parse(

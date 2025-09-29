@@ -93,7 +93,7 @@ const Banner = ({
   const closeBanner = (): void => {
     setIsClosing(true);
 
-    if (process.env.NODE_ENV === 'production')
+    if (!window.NoticelyWidgetConfig.demo)
       localStorage.setItem(
         NOTICELY_BANNER_LOCAL_STORAGE_KEY,
         JSON.stringify([

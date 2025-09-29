@@ -30,6 +30,7 @@ declare interface Window {
     origin?: string;
     enabled?: boolean;
     theme?: Theme;
+    demo?: boolean;
     banner?: {
       position?: BannerPosition;
       theme?: Theme;

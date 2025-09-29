@@ -13,7 +13,7 @@ const createBuildConfig = (isDev = false) => ({
     fileName: 'main',
     formats: ['iife', ...(isDev ? [] : ['umd'])] as ('iife' | 'umd')[]
   },
-  minify: (isDev ? false : 'terser') as boolean | 'terser',
+  minify: 'terser' as const,
   rollupOptions: {
     output: {
       extend: true,

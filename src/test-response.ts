@@ -27,8 +27,7 @@ export default {
       notice_type: 'incident',
       starts_at: '2025-08-12T08:32:52.000Z',
       ends_at: '2025-09-22T10:00:00.000Z',
-      title:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+      title: 'Demo major incident',
       severity: 'major',
       affected_services: {
         'd3a3c5b2-78ee-481b-8f91-9db57e1cec8f': ['EU', 'US'],
@@ -40,7 +39,7 @@ export default {
       notice_type: 'incident',
       starts_at: '2025-09-22T15:18:06.385Z',
       ends_at: null,
-      title: 'Minor incident',
+      title: 'Demo minor incident',
       severity: 'minor',
       affected_services: {
         'd3a3c5b2-78ee-481b-8f91-9db57e1cec8f': ['EU', 'US'],
@@ -52,7 +51,7 @@ export default {
       notice_type: 'incident',
       starts_at: '2025-09-22T09:49:00.494Z',
       ends_at: null,
-      title: 'Incident without severity',
+      title: 'Demo incident without severity',
       severity: '',
       affected_services: {}
     },
@@ -61,7 +60,7 @@ export default {
       notice_type: 'maintenance',
       starts_at: '2025-09-22T15:18:00.000Z',
       ends_at: '2025-10-22T15:18:00.000Z',
-      title: 'This is a maintenance',
+      title: 'Demo maintenance',
       severity: null,
       affected_services: {}
     }
