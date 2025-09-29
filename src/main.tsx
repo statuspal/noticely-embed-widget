@@ -128,12 +128,14 @@ const renderWidget = async (
     data = testResponse;
 
   if (config.banner.enabled) {
-    const viewedNoticeIds = JSON.parse(
-      localStorage.getItem(NOTICELY_BANNER_LOCAL_STORAGE_KEY) || '[]'
-    );
-    data.ongoing_notices = data.ongoing_notices.filter(
-      notice => !viewedNoticeIds.includes(notice.id)
-    );
+    if (!window.NoticelyWidgetConfig.demo) {
+      const viewedNoticeIds = JSON.parse(
+        localStorage.getItem(NOTICELY_BANNER_LOCAL_STORAGE_KEY) || '[]'
+      );
+      data.ongoing_notices = data.ongoing_notices.filter(
+        notice => !viewedNoticeIds.includes(notice.id)
+      );
+    }
 
     if (data.ongoing_notices.length) {
       // Find existing container or create new one

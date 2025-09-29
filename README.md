@@ -42,6 +42,7 @@ The widget automatically appears when the page loads!
 | --------- | -------- | ---------------------------------------- |
 | `enabled` | `true`   | Global enable/disable for all components |
 | `theme`   | `'auto'` | `'auto'`, `'light'`, or `'dark'` theme   |
+| `demo`    | `false`  | Only used for demo previews              |
 
 ### Banner Options (`banner` object)
 
