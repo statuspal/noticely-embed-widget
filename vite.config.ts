@@ -30,15 +30,24 @@ const autoRebuild = () => {
   return {
     name: 'auto-rebuild-widget',
     handleHotUpdate() {
-      if (!isBuilding) {
-        isBuilding = true;
+      if (isBuilding) return;
 
-        build({
-          plugins: [preact(), tailwindcss(), cssInjectedByJsPlugin()],
-          mode: 'development',
-          build: createBuildConfig(true)
-        }).finally(() => (isBuilding = false));
-      }
+      isBuilding = true;
+      console.log('🔨 Rebuilding widget bundle...');
+
+      // Run build in background without blocking HMR
+      build({
+        plugins: [preact(), tailwindcss(), cssInjectedByJsPlugin()],
+        mode: 'development',
+        build: createBuildConfig(true),
+        configFile: false,
+        logLevel: 'silent'
+      })
+        .then(() => console.log('✅ Widget bundle rebuilt'))
+        .catch(error => console.error('❌ Build failed:', error))
+        .finally(() => (isBuilding = false));
+
+      // Return undefined to let Vite handle HMR normally
       return undefined;
     }
   };
@@ -54,10 +63,10 @@ export default defineConfig(({ command, mode }) => {
         compression({
           algorithm: 'gzip',
           ext: '.gz',
-          deleteOriginFile: false, // Keep original files
-          threshold: 1024, // Only compress files larger than 1KB
-          filter: /\.(js|cjs)$/, // Include both .js and .cjs files
-          verbose: true // Show compression results
+          deleteOriginFile: false,
+          threshold: 1024,
+          filter: /\.(js|cjs)$/,
+          verbose: true
         })
       ]);
 
@@ -67,6 +76,7 @@ export default defineConfig(({ command, mode }) => {
     };
   }
 
+  // Development server with auto-rebuild
   return {
     plugins: [preact(), tailwindcss(), autoRebuild()],
     server: {

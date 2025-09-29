@@ -163,7 +163,7 @@ const Banner = ({
           <div className="flex justify-between gap-3">
             <strong>{currentNotice.title}</strong>
             <button
-              className="btn btn-sm btn-ghost btn-circle transition-all"
+              className="btn btn-sm btn-ghost btn-circle transition-all opacity-60"
               onClick={closeBanner}
               title="Close"
               aria-label="Close banner"
@@ -194,7 +194,7 @@ const Banner = ({
 
           <a
             href={`${origin}/notices/${currentNotice.id}`}
-            className="underline hover:opacity-50 transition-opacity"
+            className="underline hover:opacity-50 transition-opacity text-inherit"
             target="_blank"
             rel="noreferrer"
           >
