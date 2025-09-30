@@ -11,8 +11,7 @@ export const NOTICELY_BADGE_CONTAINER_CLASS = 'noticely-badge';
 export const NOTICELY_CLOSE_BANNER_EVENT = 'noticely-close-banner';
 export const REFRESH_INTERVAL = 60000; // ms
 
-// eslint-disable-next-line no-undef
-let interval: NodeJS.Timeout | null = null;
+let interval: number | null = null;
 let previousStatus = '';
 
 // Global API setup

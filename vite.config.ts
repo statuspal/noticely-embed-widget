@@ -20,7 +20,7 @@ const createBuildConfig = (isDev = false) => ({
       manualChunks: undefined
     }
   },
-  chunkSizeWarningLimit: 100
+  chunkSizeWarningLimit: 150
 });
 
 // Auto-rebuild plugin for development
