@@ -1,4 +1,4 @@
-import { defineConfig, build } from 'vite';
+import { defineConfig, build, loadEnv } from 'vite';
 import preact from '@preact/preset-vite';
 import { resolve } from 'path';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
@@ -71,6 +71,9 @@ export default defineConfig(({ command, mode }) => {
       ]);
 
     return {
+      define: {
+        'process.env': loadEnv(mode, process.cwd())
+      },
       plugins,
       build: createBuildConfig(mode === 'development')
     };
