@@ -103,11 +103,13 @@ npm run build  # Creates main.iife.js in dist/
 
 ```
 src/
-├── main.tsx         # Entry point and global API
-├── banner.tsx       # Status banner component
-├── badge.tsx        # Status badge component
-├── helpers.ts       # Shared utilities
-└── *.css           # Component styles
+├── badge.css          # Badge component styles
+├── badge.tsx          # Status badge component
+├── banner.css         # Banner component styles
+├── banner.tsx         # Status banner component
+├── helpers.ts         # Shared utilities
+├── main.css           # Global widget styles
+└── main.tsx           # Entry point and global API
 ```
 
 ## 🎨 Features
