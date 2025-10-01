@@ -19,7 +19,7 @@ A lightweight, embeddable status widget and badge built with Preact. Shows statu
 ### 2. Include Widget
 
 ```html
-<script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
+<script src="https://widget.noticely.io"></script>
 ```
 
 ### 3. Add Badge Container (Optional)
@@ -168,7 +168,7 @@ The widget automatically initializes when:
         badge: { enabled: true }
       };
     </script>
-    <script src="https://github.com/statuspal/noticely-embed-widget/releases/latest/download/main.iife.js"></script>
+    <script src="https://widget.noticely.io"></script>
   </body>
 </html>
 ```
