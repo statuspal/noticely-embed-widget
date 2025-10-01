@@ -83,4 +83,4 @@ jobs:
         run: |
           echo "🚀 Deployment complete!"
           echo "📦 Files deployed from dist/ directory"
-          echo "🔗 Your widget is available at: https://noticely-embed-widget.pages.dev/main.iife.js"
+          echo "🔗 Your widget is available at: https://widget.noticely.io"
