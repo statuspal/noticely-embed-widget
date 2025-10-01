@@ -112,7 +112,7 @@ src/
 
 ## 🎨 Features
 
-- **Lightweight**: Built with Preact (~15KB gzipped)
+- **Lightweight**: Built with Preact (~37.0 kB zipped)
 - **Dual Components**: Status banner + badge system
 - **Responsive**: Mobile and desktop optimized
 - **Themeable**: Auto, light, and dark themes
