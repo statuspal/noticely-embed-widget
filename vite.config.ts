@@ -2,7 +2,6 @@ import { defineConfig, build, loadEnv } from 'vite';
 import preact from '@preact/preset-vite';
 import { resolve } from 'path';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
-import compression from 'vite-plugin-compression';
 import tailwindcss from '@tailwindcss/vite';
 
 // Shared build configuration
@@ -54,30 +53,14 @@ const autoRebuild = () => {
 };
 
 export default defineConfig(({ command, mode }) => {
-  if (command === 'build') {
-    const plugins = [preact(), tailwindcss(), cssInjectedByJsPlugin()];
-
-    // Only add compression plugin for production builds
-    if (mode !== 'development')
-      plugins.push([
-        compression({
-          algorithm: 'gzip',
-          ext: '.gz',
-          deleteOriginFile: false,
-          threshold: 1024,
-          filter: /\.(js|cjs)$/,
-          verbose: true
-        })
-      ]);
-
+  if (command === 'build')
     return {
+      plugins: [preact(), tailwindcss(), cssInjectedByJsPlugin()],
       define: {
         'process.env': loadEnv(mode, process.cwd())
       },
-      plugins,
       build: createBuildConfig(mode === 'development')
     };
-  }
 
   // Development server with auto-rebuild
   return {

@@ -5,8 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: write
-  actions: read
+  contents: read
 
 jobs:
   test:
@@ -46,9 +45,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -73,21 +69,15 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Generate version tag
-        id: version
-        run: |
-          VERSION=$(date +'%Y.%m.%d-%H%M%S')
-          echo "version=v$VERSION" >> $GITHUB_OUTPUT
-          echo "Generated version: v$VERSION"
-
-      - name: Create GitHub Release with build artifacts
-        uses: softprops/action-gh-release@v2
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          tag_name: ${{ steps.version.outputs.version }}
-          name: 'Build ${{ steps.version.outputs.version }}'
-          body: |
-            Automated build from commit ${{ github.sha }}
-          files: |
-            dist/*
-          draft: false
-          prerelease: false
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=noticely-embed-widget --branch=main
+
+      - name: Output deployment URL
+        run: |
+          echo "🚀 Deployment complete!"
+          echo "📦 Files deployed from dist/ directory"
+          echo "🔗 Your widget is available at: https://noticely-embed-widget.pages.dev/main.iife.js"
