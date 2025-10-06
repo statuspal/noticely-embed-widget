@@ -42,7 +42,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'push'
 
     environment: production
     concurrency: production
