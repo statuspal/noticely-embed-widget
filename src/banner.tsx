@@ -48,10 +48,7 @@ const Banner = ({
         return;
       }
 
-      setOngoingNotices(prev => {
-        prev.shift();
-        return prev;
-      });
+      setOngoingNotices(prev => prev.slice(1));
       setIsClosing(false);
     };
 
