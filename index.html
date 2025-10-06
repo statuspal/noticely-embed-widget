@@ -4,39 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noticely Widget Demo</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./index.css" rel="stylesheet" type="text/css" />
   </head>
-  <body class="bg-base-200 p-8">
-    <div
-      class="demo-container max-w-4xl mx-auto bg-base-100 rounded-2xl shadow-xl p-8"
-    >
+  <body>
+    <div class="demo-container">
       <!-- Status Badge Example -->
-      <div class="navbar bg-base-100 rounded-lg mb-8">
-        <div class="flex-1">
-          <span class="text-xl font-bold">My Website</span>
+      <div class="demo-navbar">
+        <div class="demo-navbar-start">
+          <span class="demo-navbar-title">My Website</span>
         </div>
-        <div class="flex-none">
+        <div class="demo-navbar-end">
           <a
             href="http://acme.spage.test:7070"
-            class="noticely-badge-container btn btn-ghost"
+            class="noticely-badge-container demo-btn demo-btn-ghost"
             >System Status</a
           >
         </div>
       </div>
 
       <!-- Hero Section -->
-      <div class="hero bg-base-100 pb-8">
-        <div class="hero-content text-center">
-          <div class="max-w-md">
-            <h1 class="text-5xl font-bold text-base-content">
-              Noticely Widget Demo
-            </h1>
-            <p class="py-6 text-base-content/70">
+      <div class="demo-hero">
+        <div class="demo-hero-content">
+          <div class="demo-hero-content-inner">
+            <h1 class="demo-title">Noticely Widget Demo</h1>
+            <p class="demo-subtitle">
               Embeddable status widget and badge built with Preact. Features
               both status banners and inline badges with real-time updates.
             </p>
@@ -45,38 +36,40 @@
       </div>
 
       <!-- Interactive Demo Section -->
-      <div class="card bg-base-200 shadow-md border-l-4 border-l-primary mb-8">
-        <div class="card-body">
-          <h3 class="card-title text-xl">🧪 Interactive Demo</h3>
-          <p class="text-base-content/80 mb-6">
+      <div
+        class="demo-card demo-card-secondary demo-card-shadow-md demo-card-accent demo-mb-8"
+      >
+        <div class="demo-card-body">
+          <h3 class="demo-card-title">🧪 Interactive Demo</h3>
+          <p class="demo-text-secondary demo-mb-6">
             Test the banner and badge with different configurations:
           </p>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="card bg-base-100 shadow">
-              <div class="card-body">
-                <h4 class="card-title text-lg mb-4">Banner Controls</h4>
-                <div class="grid grid-cols-2 gap-2">
+          <div class="demo-grid demo-grid-1 demo-grid-responsive demo-gap-lg">
+            <div class="demo-card demo-card-primary demo-card-shadow">
+              <div class="demo-card-body">
+                <h4 class="demo-card-title-lg demo-mb-4">Banner Controls</h4>
+                <div class="demo-grid demo-grid-2 demo-gap-sm">
                   <button
-                    class="btn btn-primary btn-sm"
+                    class="demo-btn demo-btn-primary demo-btn-sm"
                     onclick="enableBanner('bottom-right', 'auto')"
                   >
                     Basic Banner
                   </button>
                   <button
-                    class="btn btn-primary btn-sm"
+                    class="demo-btn demo-btn-primary demo-btn-sm"
                     onclick="enableBanner('top-right', 'dark')"
                   >
                     Dark Theme
                   </button>
                   <button
-                    class="btn btn-primary btn-sm"
+                    class="demo-btn demo-btn-primary demo-btn-sm"
                     onclick="enableBanner('top-left', 'light')"
                   >
                     Top Position
                   </button>
                   <button
-                    class="btn btn-secondary btn-sm"
+                    class="demo-btn demo-btn-secondary demo-btn-sm"
                     onclick="disableBanner()"
                   >
                     Disable Banner
@@ -85,30 +78,30 @@
               </div>
             </div>
 
-            <div class="card bg-base-100 shadow">
-              <div class="card-body">
-                <h4 class="card-title text-lg mb-4">Badge Controls</h4>
-                <div class="grid grid-cols-2 gap-2">
+            <div class="demo-card demo-card-primary demo-card-shadow">
+              <div class="demo-card-body">
+                <h4 class="demo-card-title-lg demo-mb-4">Badge Controls</h4>
+                <div class="demo-grid demo-grid-2 demo-gap-sm">
                   <button
-                    class="btn btn-accent btn-sm"
+                    class="demo-btn demo-btn-accent demo-btn-sm"
                     onclick="enableBadge('right', 'auto')"
                   >
                     Enable Badge
                   </button>
                   <button
-                    class="btn btn-accent btn-sm"
+                    class="demo-btn demo-btn-accent demo-btn-sm"
                     onclick="enableBadge('top', 'dark')"
                   >
                     Dark Badge
                   </button>
                   <button
-                    class="btn btn-accent btn-sm"
+                    class="demo-btn demo-btn-accent demo-btn-sm"
                     onclick="enableBadge('left', 'light')"
                   >
                     Left Tooltip
                   </button>
                   <button
-                    class="btn btn-secondary btn-sm"
+                    class="demo-btn demo-btn-secondary demo-btn-sm"
                     onclick="disableBadge()"
                   >
                     Disable Badge
@@ -119,19 +112,21 @@
           </div>
 
           <!-- Additional Badge Examples -->
-          <div class="divider mt-8">Additional Badge Examples</div>
-          <div class="flex gap-4 flex-wrap justify-center items-center">
+          <div class="demo-divider demo-mt-8">Additional Badge Examples</div>
+          <div
+            class="demo-flex demo-gap-md demo-flex-wrap demo-flex-center demo-flex-items-center"
+          >
             <a
               href="http://acme.spage.test:7070"
-              class="noticely-badge-container btn btn-outline btn-sm"
+              class="noticely-badge-container demo-btn demo-btn-outline demo-btn-sm"
               >API Status</a
             >
             <a
               href="http://acme.spage.test:7070"
-              class="noticely-badge-container btn btn-ghost btn-sm"
+              class="noticely-badge-container demo-btn demo-btn-ghost demo-btn-sm"
               >Services</a
             >
-            <span class="noticely-badge-container badge badge-neutral"
+            <span class="noticely-badge-container demo-badge demo-badge-neutral"
               >System Health</span
             >
           </div>
@@ -139,14 +134,16 @@
       </div>
 
       <!-- Usage Guide -->
-      <div class="card bg-base-200 shadow-md border-l-4 border-l-primary">
-        <div class="card-body">
-          <h3 class="card-title text-xl">📋 Production Usage</h3>
-          <p class="text-base-content/80 mb-4">
+      <div
+        class="demo-card demo-card-secondary demo-card-shadow-md demo-card-accent"
+      >
+        <div class="demo-card-body">
+          <h3 class="demo-card-title">📋 Production Usage</h3>
+          <p class="demo-text-secondary demo-mb-4">
             Copy this code to add the widget to your website:
           </p>
 
-          <div class="mockup-code mb-4">
+          <div class="demo-code demo-mb-4">
             <pre
               data-prefix="1"
             ><code>&lt;!-- Add to your HTML head or body --&gt;</code></pre>
@@ -181,12 +178,12 @@
             <pre data-prefix="16"><code>&gt;Status&lt;/a&gt;</code></pre>
           </div>
 
-          <details class="collapse bg-base-100 collapse-arrow">
-            <summary class="collapse-title font-medium">
+          <details class="demo-collapse">
+            <summary class="demo-collapse-title">
               Advanced Configuration
             </summary>
-            <div class="collapse-content">
-              <div class="mockup-code">
+            <div class="demo-collapse-content">
+              <div class="demo-code">
                 <pre
                   data-prefix="$"
                 ><code>window.NoticelyWidgetConfig = {</code></pre>
@@ -222,12 +219,11 @@
             </div>
           </details>
 
-          <div class="alert alert-info mt-4">
+          <div class="demo-alert demo-alert-info demo-mt-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              class="stroke-current shrink-0 w-6 h-6"
             >
               <path
                 stroke-linecap="round"
